@@ -39,23 +39,23 @@ StemVAE use the probabilistic latent space model to infer the pseudo-time of cel
 * v0.1 (Sep, 2023): Initial release.
 ---
 ## Installation
-To install CellContrast, python 3.9 is required and follow the instruction
+To install stemVAE, python 3.9 is required and follow the instruction
 1. Install <a href="https://docs.conda.io/projects/miniconda/en/latest/" target="_blank">Miniconda3</a> if not already available.
 2. Clone this repository:
 ```bash
-  git clone https://github.com/HKU-BAL/CellContrast
+  git clone https://github.com/awa121/stemVAE_endometrium
 ```
-3. Navigate to `CellContrast` directory:
+3. Navigate to `stemVAE_endometrium` directory:
 ```bash
-  cd CellContrast
+  cd stemVAE_endometrium
 ```
 4. (5-10 minutes) Create a conda environment with the required dependencies:
 ```bash
   conda env create -f environment.yml
 ```
-5. Activate the `cellContrast` environment you just created:
+5. Activate the `stemVAE` environment you just created:
 ```bash
-  conda activate cellContrast
+  conda activate stemVAE
 ```
 6. Install **pytorch**: You may refer to [pytorch installtion](https://pytorch.org/get-started/locally/) as needed. For example, the command of installing a **cpu-only** pytorch is:
 ```bash
@@ -65,55 +65,23 @@ conda install pytorch torchvision torchaudio cpuonly -c pytorch
 ## Usage
 
 
-CellContrast contains 3 main moduels: train, eval and inference, for training model, benchmarking evaluation and inference of spatial relationships, respectively. To check available modules, run:
+StemVAE contains 2 main function: k fold test on dataset; predict on a new donor. And we also provide code to reproduce the result in the paper. 
 
+To check available modules, run:
+### prepare the preprocess data:
+_Todo list_
+### k fold test
+The result will save to folder _results_, log file wile save to folder _logs_
 ```bash
- 
- python cellContrast.py -h
- 
-```
-### Model training
-CellContrast model was trained based on ST data (which should be in [AnnData](https://anndata.readthedocs.io/en/latest/) format, with truth locations in `.obs[['x','y']])`. The model can be trained with the following command:
-```bash
-
-python cellContrast.py train \
---train_data_path   train_ST.h5ad \ ## required, use your ST h5ad file here
---save_folder cellContrast_models/  \ ## optional, model output path
---parameter_file parameters.json ## optional. use the default or your customized parameters here
-
-## Output file: cellContrast_models/epoch_3000.pt
+python -u VAE_fromDandan_testOnOneDonor.py 
+--vae_param_file=supervise_vae_regressionclfdecoder 
+--file_path=preprocess_02_major_Anno0717_Gene0720 --time_standard_type=neg1to1 
+--train_epoch_num=100 
+--result_save_path=230728_newAnno0717_Gene0720_18donor_2type_plot 
+> logs/log.log
 ```
 
-### Performance evaluation
-The peformance of benchmarking can be evaluated with the following command, and three metrics are included: nearest neighbor hit, Jessen-Shannon distance, and Spearman's rank correlation.
 
-```bash
-python cellContrast.py eval \
---ref_data_path   ref_ST.h5ad \          ## path of refernece ST h5ad file
---query_data_path query_ST.h5ad \        ## path of testing h5ad file with truth locations
---model_foldercellContrast_models\ ## folder of trained model
---parameter_file parameters.json \ ## parameters of trained model
---save_path results.csv \ ## evaluation result path
-
-## Output file: result.csv with neighbor hit, JSD, spearman's rank correlation for each testing sample.
-
-
-```
-
-### Spatial inference
-The spatial relationships of SC data can be obtained with the following command:
-```bash
-python cellContrast.py inference \
---ref_data_path   train_ST.h5ad \ ## path of refernece ST h5ad file
---query_data_path query_sc.h5ad \ ## path of query SC h5ad file 
---model_folder \                     ## folder of trained model
---parameter_file parameters.json \ ## uparameters of trained model
---save_path spatial_reconstructed_sc.h5ad \ ## path of of the spatial reconstructed SC data
---enable_denovo \ ## optional, run MDS to leverage the SC-SC pairwise distance to 2D pseudo space
-
-## Output file: spatially reconstructed h5ad file of annData
-```
-* what will be newly added in `sptial_reconstructed_sc.h5ad`:`.uns[['cosine sim of rep','representation','referenced x','referenced y','de novo x','de novo y']]` 
 
 
 

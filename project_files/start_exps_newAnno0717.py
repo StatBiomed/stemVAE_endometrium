@@ -19,15 +19,13 @@ import argparse
 
 def main():
     # time.sleep(60*60*2)
-    dataset_list = ["preprocess_05_NKT_Anno0717_GeneImmunity0720", "preprocess_06_myeloid_Anno0717_GeneImmunity0720"]
-    result_save_path = "230728_newAnno0717_GeneImmunity0720_18donor_2type_plot"
 
-    # dataset_list = ["preprocess_02_major_Anno0717_Gene0720",
-    #                 "preprocess_03_epi_Anno0717_Gene0720",
-    #                 "preprocess_05_NKT_Anno0717_Gene0720",
-    #                 "preprocess_06_myeloid_Anno0717_Gene0720",
-    #                 "preprocess_07_fibro_Anno0717_Gene0720"]
-    # result_save_path = "230728_newAnno0717_Gene0720_18donor_2type_plot"
+    dataset_list = ["preprocess_02_major_Anno0717_Gene0720",
+                    "preprocess_03_epi_Anno0717_Gene0720",
+                    "preprocess_05_NKT_Anno0717_Gene0720",
+                    "preprocess_06_myeloid_Anno0717_Gene0720",
+                    "preprocess_07_fibro_Anno0717_Gene0720"]
+    result_save_path = "230728_newAnno0717_Gene0720_18donor_2type_plot"
 
     # dataset_list = ["preprocess_02_major_Anno0717_GeneVP0721",
     #                 "preprocess_03_epi_Anno0717_GeneVP0721",
@@ -80,14 +78,14 @@ def main():
     for i in range(len(cmd_list)):
         print("#--- Start: {}/{}".format(i, len(cmd_list)))
         print(cmd_list[i])
-        os.system(cmd_list[i])
-        time.sleep(60)
-        if (i + 1) % 3 == 0:
-            time.sleep(60 * 30)
-        if (i + 1) % 6 == 0:
-            time.sleep(60 * 30)
-        if (i + 1) % 9 == 0:
-            time.sleep(60 * 30)
+        # os.system(cmd_list[i])
+        # time.sleep(60)
+        # if (i + 1) % 3 == 0:
+        #     time.sleep(60 * 30)
+        # if (i + 1) % 6 == 0:
+        #     time.sleep(60 * 30)
+        # if (i + 1) % 9 == 0:
+        #     time.sleep(60 * 30)
 
         sys.stdout.flush()
 

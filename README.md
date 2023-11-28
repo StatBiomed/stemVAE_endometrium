@@ -1,0 +1,122 @@
+
+[//]: # (<div align="center">)
+
+[//]: # (    <img src="images/stemVAE_logo.png" width = "350" alt="stemVAE">)
+
+[//]: # (</div>)
+
+# StemVAE: identify temporal information from endometrium cells via Deep generative model
+
+[![License](https://img.shields.io/badge/license-MIT-blue)](https://opensource.org/license/mit/) 
+
+Contact: Yuanhua Huang, Dandan Cao, Yijun Liu
+
+Email:  yuanhua@hku.hk
+
+## Introduction
+StemVAE use the probabilistic latent space model to infer the pseudo-time of cells. StemVAE input consists of an mRNA expression matrix and real-time labels of cells, and output is the reconstruction of the expression matrix and predicted time. StemVAE, based on canonical variation atuo-encoder (VAE), includes an encoder, a cell-decoder, and a time-decoder. 
+
+[//]: # (A preprint describing StemVAE's algorithms and results is at [bioRxiv]&#40;https://;.)
+
+
+
+![](./stemVAE/231019model_structure.png)
+
+---
+
+
+## Contents
+
+- [Latest Updates](#latest-updates)
+- [Installations](#installation)
+- [Usage](#usage)
+    - [Model training](#model-training)
+    - [Performance evaluation](#performance-evaluation)
+    - [Spatial inference](#spatial-inference)
+   
+
+## Latest Updates
+* v0.1 (Sep, 2023): Initial release.
+---
+## Installation
+To install CellContrast, python 3.9 is required and follow the instruction
+1. Install <a href="https://docs.conda.io/projects/miniconda/en/latest/" target="_blank">Miniconda3</a> if not already available.
+2. Clone this repository:
+```bash
+  git clone https://github.com/HKU-BAL/CellContrast
+```
+3. Navigate to `CellContrast` directory:
+```bash
+  cd CellContrast
+```
+4. (5-10 minutes) Create a conda environment with the required dependencies:
+```bash
+  conda env create -f environment.yml
+```
+5. Activate the `cellContrast` environment you just created:
+```bash
+  conda activate cellContrast
+```
+6. Install **pytorch**: You may refer to [pytorch installtion](https://pytorch.org/get-started/locally/) as needed. For example, the command of installing a **cpu-only** pytorch is:
+```bash
+conda install pytorch torchvision torchaudio cpuonly -c pytorch
+```
+
+## Usage
+
+
+CellContrast contains 3 main moduels: train, eval and inference, for training model, benchmarking evaluation and inference of spatial relationships, respectively. To check available modules, run:
+
+```bash
+ 
+ python cellContrast.py -h
+ 
+```
+### Model training
+CellContrast model was trained based on ST data (which should be in [AnnData](https://anndata.readthedocs.io/en/latest/) format, with truth locations in `.obs[['x','y']])`. The model can be trained with the following command:
+```bash
+
+python cellContrast.py train \
+--train_data_path   train_ST.h5ad \ ## required, use your ST h5ad file here
+--save_folder cellContrast_models/  \ ## optional, model output path
+--parameter_file parameters.json ## optional. use the default or your customized parameters here
+
+## Output file: cellContrast_models/epoch_3000.pt
+```
+
+### Performance evaluation
+The peformance of benchmarking can be evaluated with the following command, and three metrics are included: nearest neighbor hit, Jessen-Shannon distance, and Spearman's rank correlation.
+
+```bash
+python cellContrast.py eval \
+--ref_data_path   ref_ST.h5ad \          ## path of refernece ST h5ad file
+--query_data_path query_ST.h5ad \        ## path of testing h5ad file with truth locations
+--model_foldercellContrast_models\ ## folder of trained model
+--parameter_file parameters.json \ ## parameters of trained model
+--save_path results.csv \ ## evaluation result path
+
+## Output file: result.csv with neighbor hit, JSD, spearman's rank correlation for each testing sample.
+
+
+```
+
+### Spatial inference
+The spatial relationships of SC data can be obtained with the following command:
+```bash
+python cellContrast.py inference \
+--ref_data_path   train_ST.h5ad \ ## path of refernece ST h5ad file
+--query_data_path query_sc.h5ad \ ## path of query SC h5ad file 
+--model_folder \                     ## folder of trained model
+--parameter_file parameters.json \ ## uparameters of trained model
+--save_path spatial_reconstructed_sc.h5ad \ ## path of of the spatial reconstructed SC data
+--enable_denovo \ ## optional, run MDS to leverage the SC-SC pairwise distance to 2D pseudo space
+
+## Output file: spatially reconstructed h5ad file of annData
+```
+* what will be newly added in `sptial_reconstructed_sc.h5ad`:`.uns[['cosine sim of rep','representation','referenced x','referenced y','de novo x','de novo y']]` 
+
+
+
+
+
+

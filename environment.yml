@@ -1,0 +1,12 @@
+name: cellContrast
+channels:
+  - defaults
+  - nvidia
+  - anaconda
+  - conda-forge
+  - bioconda
+  - defaults
+dependencies:
+  - python=3.9
+  - pip:
+    - scanpy==1.9.3

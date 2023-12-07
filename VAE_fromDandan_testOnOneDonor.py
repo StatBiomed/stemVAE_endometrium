@@ -57,12 +57,6 @@ def main():
     parser.add_argument('--vae_param_file', type=str,
                         default="supervise_vae_regressionclfdecoder",
                         help="vae model parameters file.")
-    # parser.add_argument('--dropout_donor', type=str,
-    #                     default="no",  # LH7_1  or no
-    #                     help="dropout a donor.")
-
-    # parser.add_argument('--dropout_batch_effect_dim', type=int, default=5,  # LH7_1  or no
-    #                     help="Consider donor id as batch effect, set dropout batch effect dim.")
 
     args = parser.parse_args()
 

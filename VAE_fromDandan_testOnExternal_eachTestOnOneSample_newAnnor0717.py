@@ -18,7 +18,6 @@ torch.set_float32_matmul_precision('high')
 import pyro
 
 from utils.logging_system import LogHelper
-
 smoke_test = ('CI' in os.environ)  # ignore; used to check code integrity in the Pyro repo
 assert pyro.__version__.startswith('1.8.5')
 pyro.set_rng_seed(1)

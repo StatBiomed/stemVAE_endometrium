@@ -36,7 +36,7 @@ from sklearn.metrics import (
 import pandas as pd
 import scanpy as sc
 
-from utils.logging_system import  LogHelper
+from utils.logging_system import LogHelper
 import logging
 from collections import Counter
 import random
@@ -48,7 +48,8 @@ print("set global random seed: {}".format(global_random_seed))
 
 def main(min_cell_num=50, min_gene_num=100, RIF_donor_list=["RIF_4", "RIF_8", "RIF_10"], normal_donor_list=None,
          special_path_str=""):
-    save_path = "results/231207_calssifier_normalDonor_RIFDonor_tree100_07fibro/{}/".format(special_path_str)
+    save_path = "/mnt/yijun/public/for_Dandan/results1207_classifier/231207_calssifier_normalDonor_RIFDonor_tree100_07fibro/{}/".format(special_path_str)
+    # save_path = "results/231211_calssifier_normalDonor_RIFDonor_tree100_07fibro/{}/".format(special_path_str)
     import os
     if not os.path.exists(save_path):
         os.makedirs(save_path)
@@ -57,10 +58,10 @@ def main(min_cell_num=50, min_gene_num=100, RIF_donor_list=["RIF_4", "RIF_8", "R
     LogHelper.setup(log_path=logger_file, level='INFO')
     _logger = logging.getLogger(__name__)
     # -----------preprocess data---------
-    adata = anndata.read_csv("data/preprocess_07_fibro_Anno0717_Gene0720/data_count_hvg.csv",delimiter='\t')
+    adata = anndata.read_csv("data/preprocess_07_fibro_Anno0717_Gene0720/data_count_hvg.csv", delimiter='\t')
     adata = adata.T  # 基因和cell转置矩阵
     _logger.info("Import data, cell number: {}, gene number: {}".format(adata.n_obs, adata.n_vars))
-    cell_time = pd.read_csv("data/preprocess_02_major_Anno0717_Gene0720/cell_with_time.csv", sep="\t",index_col=0)
+    cell_time = pd.read_csv("data/preprocess_02_major_Anno0717_Gene0720/cell_with_time.csv", sep="\t", index_col=0)
     donor_list = np.unique(cell_time["donor"])
     if normal_donor_list is None:
         normal_donor_list = [_d for _d in donor_list if _d[:3] == "LH7"]
@@ -86,7 +87,7 @@ def main(min_cell_num=50, min_gene_num=100, RIF_donor_list=["RIF_4", "RIF_8", "R
     cell_time = cell_time.loc[adata.obs.index]
     _logger.info("Donor list: {}\nDetail: {}".format(donor_list, Counter(cell_time["donor"])))
 
-    from utils.utils_plot import  plot_boxPlot_nonExpGene_percentage_whilePreprocess
+    from utils.utils_plot import plot_boxPlot_nonExpGene_percentage_whilePreprocess
     plot_boxPlot_nonExpGene_percentage_whilePreprocess(adata, cell_time, "donor", "", "",
                                                        special_file_str="", save_images=False)
     sc.pp.normalize_total(adata, target_sum=1e6)
@@ -128,7 +129,7 @@ def main(min_cell_num=50, min_gene_num=100, RIF_donor_list=["RIF_4", "RIF_8", "R
 
     # split sc data into train set and test set
     train_x_df, train_y_df, test_x_df, test_y_df, randomSeed = read_data(sc_expression_df, sc_label_df, train_ratio=0.8)
-    setting = {"classifiers": ["RF_sig","RF"]}
+    setting = {"classifiers": ["RF_sig", "RF"]}
     clf_result_dic = classifiers([i for i in range(len(sc_expression_df.columns))], trainX_df=train_x_df, trainY_df=train_y_df,
                                  testX_df=test_x_df,
                                  testY_df=test_y_df, setting=setting, save_path=save_path)
@@ -138,8 +139,19 @@ def main(min_cell_num=50, min_gene_num=100, RIF_donor_list=["RIF_4", "RIF_8", "R
 
     save_file_name = "{}/clf_results.json".format(save_path)
     import json
+
+
+    clf_result_dic["gene_symbol"]=clf_result_dic["gene_symbol"].tolist()
+    for _cl in setting["classifiers"]:
+        clf_result_dic[_cl]['feature_importance(moreHigerMoreImportant)']=list(clf_result_dic[_cl]['feature_importance(moreHigerMoreImportant)'])
+        clf_result_dic[_cl]['cell_pred_probs']=clf_result_dic[_cl]['cell_pred_probs'].tolist()
+
     with open(save_file_name, 'w') as f:
         json.dump(clf_result_dic, f, default=str)  # 2023-07-03 22:31:50
+
+    # with open(save_file_name, 'r') as f:
+    #     data = json.load(f)
+
     _logger.info("Finish save clf result at: {}".format(save_file_name))
     return
 
@@ -260,12 +272,12 @@ def classifiers(features, trainX_df, trainY_df, testX_df, testY_df, setting, lab
         plot_hist_prob(predict_probs, testY, classifier, save_path)
         # 绘制柱状图表示每个样本在真实标签上的概率分布
         try:
-            feature_importance=model.feature_importances_
+            feature_importance = model.feature_importances_
         except:
             try:
-                feature_importance=model.estimator.feature_importances_
+                feature_importance = model.estimator.feature_importances_
             except:
-                feature_importance=None
+                feature_importance = None
         if (labelNum == 2):
             ##mark need to change
             aucroc = auc_roc(testY, predict)
@@ -281,10 +293,10 @@ def classifiers(features, trainX_df, trainY_df, testX_df, testY_df, setting, lab
                                   "f1": f1, "gm": gm, "mcc": mcc,
                                   "score": score,
                                   "cell_id": list(testY_df.index), "cell_pred": list(predict),
-                                  "cell_pred_probs":predict_probs,
+                                  "cell_pred_probs": predict_probs,
                                   "cell_real": list(testY_df.values)}
             if feature_importance is not None:
-                result[classifier]["feature_importance(moreHigerMoreImportant)"]= feature_importance
+                result[classifier]["feature_importance(moreHigerMoreImportant)"] = feature_importance
             print("mark 2023-08-23 15:21:04", classifier, acc, aucroc)
         # for muli class
         else:

@@ -48,7 +48,7 @@ print("set global random seed: {}".format(global_random_seed))
 
 def main(min_cell_num=50, min_gene_num=100, RIF_donor_list=["RIF_4", "RIF_8", "RIF_10"], normal_donor_list=None,
          special_path_str=""):
-    save_path = "/mnt/yijun/public/for_Dandan/results1207_classifier/231207_calssifier_normalDonor_RIFDonor_tree100_07fibro/{}/".format(special_path_str)
+    save_path = "results/results1207_classifier/231207_calssifier_normalDonor_RIFDonor_tree100_07fibro/{}/".format(special_path_str)
     # save_path = "results/231211_calssifier_normalDonor_RIFDonor_tree100_07fibro/{}/".format(special_path_str)
     import os
     if not os.path.exists(save_path):

@@ -47,12 +47,12 @@ import argparse
 from utils.utils_plot import *
 
 def main():
-    parser = argparse.ArgumentParser(description="CNN model for prediction of gene paris' regulatory relationship")
+    parser = argparse.ArgumentParser(description="stemVAE model for predict cell staging")
     parser.add_argument('--result_save_path', type=str,  # 2023-07-13 17:40:22
                         default="test",
                         help="results all save here")
     parser.add_argument('--file_path', type=str,
-                        default="preprocess_07_fibro_Anno0717_GeneVP0721",
+                        default="preprocess_02_major_Anno0717",
                         help="Dandan file path.")
 
     parser.add_argument('--KNN_smooth_type', type=str,
@@ -60,7 +60,7 @@ def main():
                         help="KNN smooth method")  # don't use 2023-06-26 14:04:25
 
     parser.add_argument('--train_epoch_num', type=int,
-                        default="5",
+                        default="100",
                         help="Train epoch num")
     parser.add_argument('--time_standard_type', type=str,
                         default="neg1to1",
@@ -79,12 +79,12 @@ def main():
 
     args = parser.parse_args()
 
-    data_golbal_path = "/mnt/yijun/nfs_share/awa_project/pairsRegulatePrediction/GPLVM_dandan/data/"
-    result_save_path = "/mnt/yijun/nfs_share/awa_project/pairsRegulatePrediction/GPLVM_dandan/results/" + args.result_save_path + "/"
+    data_golbal_path = "data/"
+    result_save_path = args.result_save_path + "/"
     data_path = args.file_path + "/"
 
     # save_yaml_config(vars(args), path='{}/config.yaml'.format(data_golbal_path + data_path))
-    yaml_path = "/mnt/yijun/nfs_share/awa_project/pairsRegulatePrediction/GPLVM_dandan/vae_model_configs/"
+    yaml_path = "model_configs/"
     # --------------------------------------- import vae model parameters from yaml file----------------------------------------------
     with open(yaml_path + "/" + args.vae_param_file + ".yaml", 'r') as file:
         try:

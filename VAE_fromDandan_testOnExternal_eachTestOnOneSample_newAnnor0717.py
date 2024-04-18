@@ -33,7 +33,7 @@ from utils.utils_plot import *
 def main():
     parser = argparse.ArgumentParser(description="stemVAE train model on 18 donors and test on a external donor/dataset.")
     parser.add_argument('--result_save_path', type=str,  # 2023-07-13 17:40:22
-                        default="test/",
+                        default="230930_newAnno0717_testOnExternal_E17_E26_E34",
                         help="results all save here")
     parser.add_argument('--file_path', type=str,
                         default="preprocess_02_major_Anno0717_Gene0720/",
@@ -47,15 +47,15 @@ def main():
                         help="KNN smooth method")  # don't use 2023-06-26 14:04:25
 
     parser.add_argument('--train_epoch_num', type=int,
-                        default="3",
+                        default="100",
                         help="Train epoch num")
     parser.add_argument('--time_standard_type', type=str,
-                        default="labeldic",  # labeldic
+                        default="neg1to1",  # labeldic
                         help="y_time_nor_train standard type may cause different latent space: log2, 0to1, neg1to1, labeldic,sigmoid,logit")
 
     # supervise_vae_discreteclfdecoder  /  supervise_vae_regressionclfdecoder
     parser.add_argument('--vae_param_file', type=str,
-                        default="supervise_vae_discreteclfdecoder",
+                        default="supervise_vae_regressionclfdecoder",
                         help="vae model parameters file.")
 
     args = parser.parse_args()

@@ -10,7 +10,7 @@ import logging
 
 _logger = logging.getLogger(__name__)
 
-from GPU_manager_pytorch import auto_select_gpu_and_cpu, check_memory, check_gpu_memory
+from .GPU_manager_pytorch import auto_select_gpu_and_cpu, check_memory, check_gpu_memory
 
 from torch.nn import Parameter
 import pyro
@@ -18,7 +18,7 @@ import pyro.contrib.gp as gp
 import pyro.distributions as dist
 import os
 from stemVAE import *
-from utils_plot import *
+from .utils_plot import *
 
 import time
 import random
@@ -956,6 +956,7 @@ def preprocessData_and_dropout_some_donor_or_gene(golbal_path, file_name, KNN_sm
                                                   drop_out_donor=None, donor_attr="donor", gene_list=None,
                                                   drop_out_cell_type=None,
                                                   min_cell_num=50, min_gene_num=100, keep_sub_type_with_cell_num=None,
+keep_sub_donor_with_cell_num=None,
                                                   external_file_name=None, external_cell_info_file=None,
                                                   # external_cellId_list=None,
                                                   downSample_on_testData_bool=False, test_donor=None,
@@ -966,7 +967,7 @@ def preprocessData_and_dropout_some_donor_or_gene(golbal_path, file_name, KNN_sm
                                                   random_drop_cell_bool=False,
                                                   normalized_cellTotalCount=1e6):
     # drop should before perprocess sc data
-    from utils_plot import plot_boxPlot_nonExpGene_percentage_whilePreprocess
+    from .utils_plot import plot_boxPlot_nonExpGene_percentage_whilePreprocess
     _logger.info("the original sc expression anndata should be gene as row, cell as column")
     try:
         adata = anndata.read_csv("{}/{}".format(golbal_path, file_name), delimiter='\t')
@@ -1140,6 +1141,24 @@ def preprocessData_and_dropout_some_donor_or_gene(golbal_path, file_name, KNN_sm
                                                               special_file_str=f"5filterGene{min_cell_num}Cell{min_gene_num}")
         except:
             print("some error while plot before boxplot.")
+    if keep_sub_donor_with_cell_num is not None:
+        # 2024-04-18 11:28:33 add for dandan NC review, test subset same cell number for each donor
+        print(f"keep subset same cell number for each donor: {keep_sub_donor_with_cell_num}")
+        drop_out_cell = []
+        _cell_time = cell_time.loc[adata.obs_names]
+        from collections import Counter
+        _num_dic = dict(Counter(_cell_time["donor"]))
+        _logger.info("In this dataset (donor, number of cells): {}".format(_num_dic))
+        for _donor, _cell_num in _num_dic.items():
+            if _cell_num > keep_sub_donor_with_cell_num:
+                _cell_donor_df = _cell_time.loc[_cell_time["donor"] == _donor]
+                _drop_cell = _cell_donor_df.sample(n=len(_cell_donor_df) - keep_sub_donor_with_cell_num,
+                                                  random_state=0).index
+                drop_out_cell += list(_drop_cell)
+                _logger.info(f"Drop out {len(_drop_cell)} cells for donor { _donor}, from {_cell_num} to {keep_sub_donor_with_cell_num} cells")
+        adata = adata[adata.obs_names.drop(drop_out_cell)].copy()
+        _logger.info("After drop out {}, get expression dataframe with shape (cell, gene): {}.".format(drop_out_donor,
+                                                                                                       adata.shape))
 
     if keep_sub_type_with_cell_num is not None:
         drop_out_cell = []

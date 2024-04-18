@@ -45,36 +45,36 @@ import argparse
 from utils.utils_plot import *
 
 def main():
-    parser = argparse.ArgumentParser(description="CNN model for prediction of gene paris' regulatory relationship")
+    parser = argparse.ArgumentParser(description="stemVAE model for predict cell staging")
     parser.add_argument('--result_save_path', type=str,  # 2023-07-13 17:40:22
-                        default="test",
+                        default="240417_newAnno0717_Gene0720_18donor_2type_plot_02_major_withSubCellType4000Cell",
                         help="results all save here")
     parser.add_argument('--file_path', type=str,
                         default="preprocess_02_major_Anno0717_Gene0720",
-                        help="Dandan file path.")
+                        help="Data file path.")
 
     parser.add_argument('--KNN_smooth_type', type=str,
                         default="mingze",
                         help="KNN smooth method")  # don't use 2023-06-26 14:04:25
 
     parser.add_argument('--train_epoch_num', type=int,
-                        default="5",
+                        default="100",
                         help="Train epoch num")
     parser.add_argument('--time_standard_type', type=str,
-                        default="labeldic",
+                        default="neg1to1",
                         help="y_time_nor_train standard type may cause different latent space: log2, 0to1, neg1to1, labeldic,sigmoid,logit")
-    # supervise_vae_discreteclfdecoder  /  supervise_vae_regressionclfdecoder
     parser.add_argument('--vae_param_file', type=str,
-                        default="supervise_vae",
+                        default="supervise_vae_regressionclfdecoder",
                         help="vae model parameters file.")
 
     args = parser.parse_args()
-
-    data_golbal_path = "/mnt/yijun/nfs_share/awa_project/pairsRegulatePrediction/GPLVM_dandan/data/"
-    result_save_path = "/mnt/yijun/nfs_share/awa_project/pairsRegulatePrediction/GPLVM_dandan/results/" + args.result_save_path + "/"
+    now_abs_path=os.getcwd()
+    print(f"Project absolutely path:{now_abs_path}.")
+    data_golbal_path = f"{now_abs_path}/data/"
+    result_save_path = f"{now_abs_path}/results/" + args.result_save_path + "/"
     data_path = args.file_path + "/"
 
-    yaml_path = "/mnt/yijun/nfs_share/awa_project/pairsRegulatePrediction/GPLVM_dandan/vae_model_configs/"
+    yaml_path = f"{now_abs_path}/model_configs/"
     # --------------------------------------- import vae model parameters from yaml file----------------------------------------------
     with open(yaml_path + "/" + args.vae_param_file + ".yaml", 'r') as file:
         try:

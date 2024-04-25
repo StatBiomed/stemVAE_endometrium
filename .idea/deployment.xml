@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
-  <component name="PublishConfigData" autoUpload="Always" serverName="github_stemVAE">
+  <component name="PublishConfigData" autoUpload="Always" serverName="github_stemVAE" uploadOnCheckin="1cf07f5f-4f80-416e-ab20-a7e209b2bdd8">
     <serverData>
       <paths name="github_stemVAE">
         <serverdata>
@@ -10,6 +10,7 @@
         </serverdata>
       </paths>
     </serverData>
+    <option name="myUploadOnCheckinName" value="github_stemVAE" />
     <option name="myAutoUpload" value="ALWAYS" />
   </component>
 </project>

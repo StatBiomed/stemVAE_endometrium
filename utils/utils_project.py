@@ -1004,6 +1004,7 @@ keep_sub_donor_with_cell_num=None,
     adata = adata.T  # 基因和cell转置矩阵
     _logger.info("Import data, cell number: {}, gene number: {}".format(adata.n_obs, adata.n_vars))
     cell_time = pd.read_csv(golbal_path + cell_info_file, sep="\t", index_col=0)
+
     if external_cell_info_file is not None:
         external_cell_time = pd.read_csv(golbal_path + external_cell_info_file, sep="\t", index_col=0)
         _logger.info("Import external cell info dataframe with (cell, attr-num): {}".format(external_cell_time.shape))

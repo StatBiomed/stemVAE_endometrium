@@ -33,13 +33,15 @@ from utils.utils_plot import *
 def main():
     parser = argparse.ArgumentParser(description="stemVAE train model on 18 donors and test on a external donor/dataset.")
     parser.add_argument('--result_save_path', type=str,  # 2023-07-13 17:40:22
-                        default="230930_newAnno0717_testOnExternal_E17_E26_E34",
+                        default="240425_testOn_bulkRNA",
+                        # default="230930_newAnno0717_testOnExternal_E17_E26_E34",
                         help="results all save here")
     parser.add_argument('--file_path', type=str,
                         default="preprocess_02_major_Anno0717_Gene0720/",
                         help="Dandan file path.")
     parser.add_argument('--external_test_path', type=str,
-                        default="test_external0823/preprocess_A13_A30_visium/",
+                        default="test_dandan_external240435/bulk_RNAseq_240418/",
+                        # default="test_external0823/preprocess_A13_A30_visium/",
                         help="Dandan file path.")
 
     parser.add_argument('--KNN_smooth_type', type=str,
@@ -126,6 +128,7 @@ def main():
                                                                                     KNN_smooth_type, cell_info_file_csv,
                                                                                     drop_out_donor=drop_out_donor,
                                                                                     donor_attr="donor",
+                                                                                    plot_boxPlot_bool=True,
                                                                                     external_file_name=external_sc_data_file_csv,
                                                                                     external_cell_info_file=external_cell_info_file_csv)
         _logger.info("For each donor (donor_id, cell_num):{} ".format(Counter(cell_time["donor"])))

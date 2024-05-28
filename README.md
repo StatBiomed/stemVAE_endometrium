@@ -11,8 +11,7 @@
 
 Contact: Yuanhua Huang, Dandan Cao, Yijun Liu
 
-Email:  yuanhua@hku.hk
-
+Email:  yuanhua@hku.hk.
 ## Introduction
 StemVAE use the probabilistic latent space model to infer the pseudo-time of cells. StemVAE input consists of an mRNA expression matrix and real-time labels of cells, and output is the reconstruction of the expression matrix and predicted time. StemVAE, based on canonical variation atuo-encoder (VAE), includes an encoder, a cell-decoder, and a time-decoder. 
 
@@ -79,6 +78,8 @@ python -u VAE_fromDandan_testOnOneDonor.py
 --train_epoch_num=100 
 --result_save_path=230728_newAnno0717_Gene0720_18donor_2type_plot 
 > logs/log.log
+
+
 ```
 
 

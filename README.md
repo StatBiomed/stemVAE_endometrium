@@ -8,7 +8,7 @@
 # StemVAE: identify temporal information from endometrium cells via Deep generative model
 
 [![License](https://img.shields.io/badge/license-MIT-blue)](https://opensource.org/license/mit/) 
-
+[![DOI](https://zenodo.org/badge/724489497.svg)](https://doi.org/10.5281/zenodo.13950075)
 Contact: Yuanhua Huang, Dandan Cao, Yijun Liu
 
 Email:  yuanhua@hku.hk.
